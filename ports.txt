@@ -1,0 +1,5 @@
+shopme-back-end:
+	localhost:8081/ShopmeAdmin
+
+shopme-front-end:
+	localhost:8080/Shopme
