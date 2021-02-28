@@ -1,7 +1,6 @@
 package com.shopme.admin.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.useRepresentation;
 
 import java.util.List;
 
@@ -106,34 +105,51 @@ public class UserRepositoryTests {
 	public void testCountById() {
 		Integer idInteger = 1;
 		Long countById = repo.countById(idInteger);
-		
+
 		assertThat(countById).isNotNull().isGreaterThan(0);
 	}
-	
+
 	@Test
 	public void testDisableUser() {
 		Integer id = 1;
 		repo.updateEnabledStatus(id, false);
 	}
-	
+
 	@Test
 	public void testEnableUser() {
 		Integer id = 3;
 		repo.updateEnabledStatus(id, true);
 	}
-	
+
 	@Test
 	public void testListFirstPage() {
-		int pageNumber =0;
-		int pageSize=4;
-		
+		int pageNumber = 0;
+		int pageSize = 4;
+
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		Page<User> page = repo.findAll(pageable);
-		
+
 		List<User> listUsers = page.getContent();
-		
-		listUsers.forEach(user->System.out.println(user));
-		
+
+		listUsers.forEach(user -> System.out.println(user));
+
 		assertThat(listUsers.size()).isEqualTo(pageSize);
+	}
+
+	@Test
+	public void testSearcheUsers() {
+		String keyword = "bruce";
+
+		int pageNumber = 0;
+		int pageSize = 4;
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<User> page = repo.findAll(keyword, pageable);
+
+		List<User> listUsers = page.getContent();
+
+		listUsers.forEach(user -> System.out.println(user));
+
+		assertThat(listUsers.size()).isGreaterThan(0);
 	}
 }
