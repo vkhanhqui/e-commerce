@@ -33,8 +33,7 @@ public class UserController {
 
 	@GetMapping("/users/page/{pageNum}")
 	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
-			@Param("sortField") String sortField, @Param("sortDir") String sortDir
-			, @Param("keyword") String keyword) {
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
 		Page<User> page = service.listByPage(pageNum, sortField, sortDir, keyword);
 		List<User> listUsers = page.getContent();
 
@@ -43,7 +42,7 @@ public class UserController {
 		if (endCount > page.getTotalElements()) {
 			endCount = page.getTotalElements();
 		}
-		
+
 		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
 
 		model.addAttribute("currentPage", pageNum);
@@ -93,7 +92,13 @@ public class UserController {
 		}
 
 		redirectAttributes.addFlashAttribute("message", "The user has been saved successfully.");
-		return "redirect:/users";
+
+		return getRedirectURLtoAffectedUser(user.getEmail());
+	}
+
+	private String getRedirectURLtoAffectedUser(String email) {
+		String firstPartEmail = email.split("@")[0];
+		return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword=" + firstPartEmail;
 	}
 
 	@GetMapping("/users/edit/{id}")
@@ -124,13 +129,15 @@ public class UserController {
 		return "redirect:/users";
 	}
 
-	@GetMapping("/users/{id}/enabled/{status}")
+	@GetMapping("/users/{id}/{email}/enabled/{status}")
 	public String updateUserEnabledStatus(@PathVariable(name = "id") Integer id,
-			@PathVariable(name = "status") boolean enabled, RedirectAttributes redirectAttributes) {
+			@PathVariable(name = "email") String email, @PathVariable(name = "status") boolean enabled,
+			RedirectAttributes redirectAttributes) {
 		service.updateUserEnabledStatus(id, enabled);
 		String status = enabled ? "enabled" : "disabled";
 		String message = "The user ID " + id + " has been " + status;
 		redirectAttributes.addFlashAttribute("message", message);
-		return "redirect:/users";
+
+		return getRedirectURLtoAffectedUser(email);
 	}
 }
