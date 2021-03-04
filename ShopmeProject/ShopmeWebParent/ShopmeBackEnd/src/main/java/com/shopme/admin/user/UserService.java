@@ -32,7 +32,7 @@ public class UserService {
 	public static final int USERS_PER_PAGE = 4;
 
 	public List<User> listAll() {
-		return (List<User>) userRepository.findAll();
+		return (List<User>) userRepository.findAll(Sort.by("firstName").ascending());
 	}
 
 	public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
@@ -41,11 +41,11 @@ public class UserService {
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 
 		Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE, sort);
-		
-		if(keyword != null) {
+
+		if (keyword != null) {
 			return userRepository.findAll(keyword, pageable);
 		}
-		
+
 		return userRepository.findAll(pageable);
 	}
 
