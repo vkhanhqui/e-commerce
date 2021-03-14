@@ -26,7 +26,7 @@ import com.shopme.common.entity.User;
 public class UserController {
 
 	@Autowired
-	private UserService service;
+	private UserService userService;
 
 	@GetMapping("/users")
 	public String listFirstPage(Model model) {
@@ -36,7 +36,7 @@ public class UserController {
 	@GetMapping("/users/page/{pageNum}")
 	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
 			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
-		Page<User> page = service.listByPage(pageNum, sortField, sortDir, keyword);
+		Page<User> page = userService.listByPage(pageNum, sortField, sortDir, keyword);
 		List<User> listUsers = page.getContent();
 
 		long startCount = (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
@@ -63,7 +63,7 @@ public class UserController {
 
 	@GetMapping("/users/new")
 	public String newUser(Model model) {
-		List<Role> listRoles = service.listRoles();
+		List<Role> listRoles = userService.listRoles();
 		User user = new User();
 
 		model.addAttribute("listRoles", listRoles);
@@ -79,7 +79,7 @@ public class UserController {
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			user.setPhotos(fileName);
-			User savedUser = service.save(user);
+			User savedUser = userService.save(user);
 
 			String uploadDir = "user-photos/" + savedUser.getId();
 
@@ -90,7 +90,7 @@ public class UserController {
 			if (user.getPhotos().isEmpty()) {
 				user.setPhotos(null);
 			}
-			service.save(user);
+			userService.save(user);
 		}
 
 		redirectAttributes.addFlashAttribute("message", "The user has been saved successfully.");
@@ -106,8 +106,8 @@ public class UserController {
 	@GetMapping("/users/edit/{id}")
 	public String editUser(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
-			List<Role> listRoles = service.listRoles();
-			User user = service.get(id);
+			List<Role> listRoles = userService.listRoles();
+			User user = userService.get(id);
 
 			model.addAttribute("listRoles", listRoles);
 			model.addAttribute("user", user);
@@ -123,7 +123,7 @@ public class UserController {
 	public String deleteUser(@PathVariable(name = "id") Integer id, Model model,
 			RedirectAttributes redirectAttributes) {
 		try {
-			service.delete(id);
+			userService.delete(id);
 			redirectAttributes.addFlashAttribute("message", "The user ID " + id + " has been deleted successfully");
 		} catch (UserNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
@@ -135,7 +135,7 @@ public class UserController {
 	public String updateUserEnabledStatus(@PathVariable(name = "id") Integer id,
 			@PathVariable(name = "email") String email, @PathVariable(name = "status") boolean enabled,
 			RedirectAttributes redirectAttributes) {
-		service.updateUserEnabledStatus(id, enabled);
+		userService.updateUserEnabledStatus(id, enabled);
 		String status = enabled ? "enabled" : "disabled";
 		String message = "The user ID " + id + " has been " + status;
 		redirectAttributes.addFlashAttribute("message", message);
@@ -145,21 +145,21 @@ public class UserController {
 
 	@GetMapping("/users/export/csv")
 	public void exportToCSV(HttpServletResponse response) throws IOException {
-		List<User> listUsers = service.listAll();
+		List<User> listUsers = userService.listAll();
 		UserCsvExporter csvExporter = new UserCsvExporter();
 		csvExporter.export(listUsers, response);
 	}
 
 	@GetMapping("/users/export/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
-		List<User> listUsers = service.listAll();
+		List<User> listUsers = userService.listAll();
 		UserExcelExporter excelExporter = new UserExcelExporter();
 		excelExporter.export(listUsers, response);
 	}
 
 	@GetMapping("/users/export/pdf")
 	public void exportToPDF(HttpServletResponse response) throws IOException {
-		List<User> listUsers = service.listAll();
+		List<User> listUsers = userService.listAll();
 		UserPDFExporter pdfExporter = new UserPDFExporter();
 		pdfExporter.export(listUsers, response);
 	}

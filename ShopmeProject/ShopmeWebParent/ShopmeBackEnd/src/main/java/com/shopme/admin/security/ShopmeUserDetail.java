@@ -14,6 +14,11 @@ import com.shopme.common.entity.User;
 
 public class ShopmeUserDetail implements UserDetails {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3760540076113175913L;
+	
 	private User user;
 
 	public ShopmeUserDetail(User user) {
@@ -65,6 +70,14 @@ public class ShopmeUserDetail implements UserDetails {
 	
 	public String getFullname() {
 		return user.getFullName();
+	}
+	
+	public void setFirstName(String firstName) {
+		this.user.setFirstName(firstName);
+	}
+	
+	public void setLastName(String lastName) {
+		this.user.setLastName(lastName);
 	}
 
 }

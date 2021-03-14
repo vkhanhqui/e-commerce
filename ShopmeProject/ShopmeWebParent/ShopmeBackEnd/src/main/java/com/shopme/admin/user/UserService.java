@@ -30,6 +30,27 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 
 	public static final int USERS_PER_PAGE = 4;
+	
+	public User getByEmail(String email) {
+		return userRepository.getUserByEmail(email);
+	}
+	
+	public User updateAccount(User userInform) {
+		User userInDB = userRepository.findById(userInform.getId()).get();
+		
+		if(!userInform.getPassword().isEmpty()) {
+			userInDB.setPassword(userInform.getPassword());
+			encodePassword(userInDB);
+		}
+		if(userInform.getPhotos() != null) {
+			userInDB.setPhotos(userInform.getPhotos());
+		}
+		
+		userInDB.setFirstName(userInform.getFirstName());
+		userInDB.setLastName(userInform.getLastName());
+		
+		return userRepository.save(userInDB);
+	}
 
 	public List<User> listAll() {
 		return (List<User>) userRepository.findAll(Sort.by("firstName").ascending());
