@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.user.export;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.shopme.common.entity.User;
 
-public class UserPDFExporter extends AbstractExporter {
+public class UserPdfExporter extends AbstractExporter {
 
 	public void export(List<User> listUsers, HttpServletResponse response) throws IOException {
 		super.setResponseHeader(response, "application/pdf", ".pdf");

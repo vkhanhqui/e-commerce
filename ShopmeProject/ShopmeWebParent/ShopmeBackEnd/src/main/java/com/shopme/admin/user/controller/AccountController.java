@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.user.controller;
 
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.security.ShopmeUserDetail;
+import com.shopme.admin.user.UserService;
 import com.shopme.common.entity.User;
 
 @Controller
@@ -29,7 +30,7 @@ public class AccountController {
 		User user = userService.getByEmail(email);
 		model.addAttribute("user", user);
 
-		return "account-form";
+		return "users/account-form";
 	}
 
 	@PostMapping("/account/update")

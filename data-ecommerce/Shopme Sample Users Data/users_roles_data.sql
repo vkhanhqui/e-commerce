@@ -1,3 +1,5 @@
+
+
 -- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: shopmedb
@@ -21,7 +23,11 @@
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Admin','manage everything'),(2,'Salesperson','manage product price, customers, shipping, orders and sales report'),(3,'Editor','manage categories, brands, products, articles and menus'),(4,'Shipper','view products, view orders and update order status'),(5,'Assistant','manage questions and reviews');
+INSERT INTO `roles` VALUES (1,'manage everything','Admin'),
+(2,'manage product price, customers, shipping, orders and sales report','Salesperson'),
+(3,'manage categories, brands, products, articles and menus','Editor'),
+(4,'view products, view orders and update order status','Shipper'),
+(5,'manage questions and reviews','Assistant');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 

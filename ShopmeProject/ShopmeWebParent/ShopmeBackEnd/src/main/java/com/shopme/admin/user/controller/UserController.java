@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.user.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
+import com.shopme.admin.user.UserNotFoundException;
+import com.shopme.admin.user.UserService;
+import com.shopme.admin.user.export.UserCsvExporter;
+import com.shopme.admin.user.export.UserExcelExporter;
+import com.shopme.admin.user.export.UserPdfExporter;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
@@ -58,7 +63,7 @@ public class UserController {
 		model.addAttribute("reverseSortDir", reverseSortDir);
 		model.addAttribute("keyword", keyword);
 
-		return "users";
+		return "users/users";
 	}
 
 	@GetMapping("/users/new")
@@ -70,7 +75,7 @@ public class UserController {
 		model.addAttribute("user", user);
 		model.addAttribute("pageTitle", "Create New User");
 
-		return "user-form";
+		return "users/user-form";
 	}
 
 	@PostMapping("/users/save")
@@ -112,7 +117,7 @@ public class UserController {
 			model.addAttribute("listRoles", listRoles);
 			model.addAttribute("user", user);
 			model.addAttribute("pageTitle", "Edit User (ID: " + id + ")");
-			return "user-form";
+			return "users/user-form";
 		} catch (UserNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 			return "redirect:/users";
@@ -160,7 +165,7 @@ public class UserController {
 	@GetMapping("/users/export/pdf")
 	public void exportToPDF(HttpServletResponse response) throws IOException {
 		List<User> listUsers = userService.listAll();
-		UserPDFExporter pdfExporter = new UserPDFExporter();
+		UserPdfExporter pdfExporter = new UserPdfExporter();
 		pdfExporter.export(listUsers, response);
 	}
 }
